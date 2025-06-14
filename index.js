@@ -1,16 +1,24 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const app = express();
-const profiles = require("./routes/profiles");
+const users = require("./routes/user");
 
 // middlewares
 app.use(express.json()); //parse incoming body to json
 
 // route middlewares
-app.use("/api/profile", profiles);
+app.use("/api/users", users);
 
 
 
 
+
+
+
+// connect to mongodb
+mongoose.connect("mongodb://localhost/blog")
+.then(()=> console.log("successfully connected to mongodb"))
+.catch((err)=> console.error(err));
 
 
 

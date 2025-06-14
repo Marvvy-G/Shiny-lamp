@@ -1,7 +1,7 @@
 const Joi = require("joi");
 
 
-const validateProfile = ( data ) => {
+const validateUser = ( data ) => {
     // create schema for expected json body
     const schema = Joi.object({
         name: Joi.string().min(3).max(50).required(),
@@ -15,4 +15,4 @@ const validateProfile = ( data ) => {
 }
 
 
-module.exports.validateProfile = validateProfile;
+module.exports.validateUser = validateUser;
