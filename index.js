@@ -2,12 +2,14 @@ const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
 const users = require("./routes/user");
+const posts = require("./routes/post");
 
 // middlewares
 app.use(express.json()); //parse incoming body to json
 
 // route middlewares
 app.use("/api/users", users);
+app.use("/api/posts", posts);
 
 
 
