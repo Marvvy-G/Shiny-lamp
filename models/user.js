@@ -2,7 +2,13 @@ const mongoose = require("mongoose");
 
 // mongoose user model with schema
 const Users = mongoose.model("User", new mongoose.Schema({
-    name: {
+    firstName: {
+        type: String,
+        required: true,
+        minLength: 3,
+        maxLength: 50
+    },
+    lastName: {
         type: String,
         required: true,
         minLength: 3,

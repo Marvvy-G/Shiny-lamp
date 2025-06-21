@@ -38,7 +38,8 @@ router.post("/", async (req, res) => {
     try {
          // create new profile instance
         const newUser = new Users({
-            name: req.body.name,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
             age: req.body.age,
             gender: req.body.gender
         })
@@ -76,7 +77,8 @@ router.put("/:id", async (req, res)=>{
             req.params.id, 
             // updated data
             {
-                name: req.body.name,
+                firstName : req.body.firstName,
+                lastName : req.body.lastName,
                 age : req.body.age,
                 gender : req.body.gender
             },
