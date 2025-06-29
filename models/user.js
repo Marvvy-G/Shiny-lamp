@@ -21,7 +21,21 @@ const Users = mongoose.model("User", new mongoose.Schema({
     gender: {
         type: String,
         required: true,
-        minLength: 4
+        minLength: 4,
+        maxLength:50,
+    },
+    email: {
+        type: String,
+        required: true,
+        minLength: 4,
+        maxLength:255,
+        unique: true
+    },
+    password: {
+        type: String,
+        required: true,
+        minLength: 4,
+        maxLength: 1024
     }
 }));
 

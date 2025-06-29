@@ -1,5 +1,8 @@
 const express = require("express");
+const bcrypt = require("bcrypt");
 const router = express.Router();
+const _ = require("lodash");
+// model
 const Users = require("../models/user");
 
 // helper utilities
@@ -29,7 +32,7 @@ router.post("/", async (req, res) => {
     // validate incoming body
     const { error } = validateUser(req.body);
     if(error){
-        res.status(400).send({
+        return res.status(400).send({
             message: "Oops! Failed to create user.",
             errorDetails: error.details[0].message
         })
@@ -37,21 +40,25 @@ router.post("/", async (req, res) => {
 
     try {
          // create new profile instance
-        const newUser = new Users({
+        let newUser = new Users({
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             age: req.body.age,
-            gender: req.body.gender
+            gender: req.body.gender,
+            email: req.body.email,
+            password: req.body.password
         })
 
+        // Hash password using bcrypt
+        newUser.password = await bcrypt.hash(req.body.password, 10);
 
         // save new user in database
-        const result = await newUser.save();
+        await newUser.save();
 
         // send response
         res.send({
             message: "Success creating user!",
-            data: result
+            data: _.pick(newUser, ["_id","firstName","lastName","email"])
         });
     } catch (err) {
         console.error(err)
@@ -64,7 +71,7 @@ router.put("/:id", async (req, res)=>{
     // validate incoming body
     const { error } = validateUser(req.body);
     if(error){
-        res.status(400).send({
+        return res.status(400).send({
             message: "Oops! Failed to create user.",
             errorDetails: error.details[0].message
         })
