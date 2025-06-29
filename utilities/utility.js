@@ -68,8 +68,22 @@ const validateDeleteBlogPost = ( data ) => {
 }
 
 
+// Authentication related utilities
+const validateLogin = ( data ) => {
+    // create schema for expected json body
+    const schema = Joi.object({
+        email: Joi.string().email().min(5).max(255).required(),
+        password: Joi.string().min(5).max(255).required()
+    });
+    // validate body based on schema
+    const result = schema.validate(data);
+    // return the result
+    return result;
+}
+
 module.exports.validateUser = validateUser;
 module.exports.validateUpdateUser = validateUpdateUser;
 module.exports.validateBlogPost = validateBlogPost;
 module.exports.validateUpdateBlogPost = validateUpdateBlogPost;
 module.exports.validateDeleteBlogPost = validateDeleteBlogPost;
+module.exports.validateLogin = validateLogin;
