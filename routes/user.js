@@ -6,7 +6,7 @@ const _ = require("lodash");
 const Users = require("../models/user");
 
 // helper utilities
-const { validateUser } = require("../utilities/utility");
+const { validateUser, validateUpdateUser } = require("../utilities/utility");
 
 
 
@@ -69,7 +69,7 @@ router.post("/", async (req, res) => {
 // update a user
 router.put("/:id", async (req, res)=>{
     // validate incoming body
-    const { error } = validateUser(req.body);
+    const { error } = validateUpdateUser(req.body);
     if(error){
         return res.status(400).send({
             message: "Oops! Failed to create user.",
@@ -87,7 +87,8 @@ router.put("/:id", async (req, res)=>{
                 firstName : req.body.firstName,
                 lastName : req.body.lastName,
                 age : req.body.age,
-                gender : req.body.gender
+                gender : req.body.gender,
+                email: req.body.email
             },
             // return updated data instead of original data
             { 

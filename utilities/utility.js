@@ -17,6 +17,21 @@ const validateUser = ( data ) => {
     return result;
 }
 
+const validateUpdateUser = ( data ) => {
+    // create schema for expected json body
+    const schema = Joi.object({
+        firstName: Joi.string().min(3).max(50).required(),
+        lastName: Joi.string().min(3).max(50).required(),
+        age: Joi.number().required(),
+        gender: Joi.string().min(4).max(50).required(),
+        email: Joi.string().email().min(5).max(255).required(),
+    });
+    // validate body based on schema
+    const result = schema.validate(data);
+    // return the result
+    return result;
+}
+
 const validateBlogPost = ( data ) => {
     // create schema for expected json body
     const schema = Joi.object({
@@ -54,6 +69,7 @@ const validateDeleteBlogPost = ( data ) => {
 
 
 module.exports.validateUser = validateUser;
+module.exports.validateUpdateUser = validateUpdateUser;
 module.exports.validateBlogPost = validateBlogPost;
 module.exports.validateUpdateBlogPost = validateUpdateBlogPost;
 module.exports.validateDeleteBlogPost = validateDeleteBlogPost;
