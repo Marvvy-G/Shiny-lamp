@@ -4,6 +4,7 @@ const { validateBlogPost, validateUpdateBlogPost, validateDeleteBlogPost } = req
 const router = express.Router();
 // middleware
 const verifyAuthToken = require("../middleware/auth");
+const verifyAdminRole = require("../middleware/admin");
 
 // Get all blog posts
 router.get("/", async (req, res) => {
@@ -25,7 +26,7 @@ router.get("/", async (req, res) => {
 });
 
 // create blog post
-router.post("/", verifyAuthToken , async (req, res) => {
+router.post("/", [verifyAuthToken, verifyAdminRole] , async (req, res) => {
     // Validate incoming body
     const { error } = validateBlogPost(req.body);
     if(error){
@@ -40,7 +41,7 @@ router.post("/", verifyAuthToken , async (req, res) => {
         const newPost = new BlogPost({
             title: req.body.title,
             content: req.body.content,
-            author: req.body.authorId
+            authorId: req.body.authorId
         });
 
         // save new instance to database
@@ -58,7 +59,7 @@ router.post("/", verifyAuthToken , async (req, res) => {
 });
 
 // Update blog post
-router.put("/:id", async (req, res) => {
+router.put("/:id", [verifyAuthToken, verifyAdminRole] , async (req, res) => {
     // Validate incoming body
     const { error } = validateUpdateBlogPost(req.body);
     if(error){
@@ -80,7 +81,7 @@ router.put("/:id", async (req, res) => {
 
         // prevent non author from editing post
         //.equals(): this is a mongoose method for comparing either regular strings or mongoose objectId's to mongoose objectId's
-        if(!post.author._id.equals(req.body.userId)){
+        if(!post.authorId._id.equals(req.user._id)){
             return res.status(400).send({
                 message: "User not permitted to edit post!",
             });
@@ -107,15 +108,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // delete blog post
-router.delete("/:id", async (req, res) => {
-    // Validate incoming body
-    const { error } = validateDeleteBlogPost(req.body);
-    if(error){
-        return res.status(400).send({
-            message: "Failed to delete post!",
-            details: error.details[0].message
-        })
-    };
+router.delete("/:id", [verifyAuthToken, verifyAdminRole] , async (req, res) => {
 
     try {
         const post = await BlogPost.findById(req.params.id);
@@ -126,7 +119,7 @@ router.delete("/:id", async (req, res) => {
         }
 
         // prevent non author from deleting post
-        if(!post.author._id.equals(req.body.userId)){
+        if(!post.authorId._id.equals(req.user._id)){
             return res.status(400).send({
                 message: "User not permitted to delete post!",
             });

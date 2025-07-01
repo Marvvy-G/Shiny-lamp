@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const config = require("config");
 const jwt = require("jsonwebtoken");
 
-
+const userRoles = ["USER", "ADMIN"];
 // user schema
 const userSchema = new mongoose.Schema({
     firstName: {
@@ -39,6 +39,11 @@ const userSchema = new mongoose.Schema({
         required: true,
         minLength: 4,
         maxLength: 1024
+    },
+    role: {
+        type: String,
+        enum: userRoles,
+        default: "USER"
     }
 });
 
@@ -46,12 +51,13 @@ const userSchema = new mongoose.Schema({
 userSchema.methods.generateAuthToken = function (){
 
     const token =  jwt.sign(
-        {_id: this._id,fName: this.firstName}, // payload
+        {_id: this._id, role: this.role}, // payload
         config.get("blog_jwtPrivateKey") // Secret private key
     ); 
 
     return token;
 }
+
 // mongoose user model with schema
 const Users = mongoose.model("User", userSchema);
 

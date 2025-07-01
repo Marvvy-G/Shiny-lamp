@@ -4,11 +4,18 @@ const app = express();
 const users = require("./routes/user");
 const posts = require("./routes/post");
 const login = require("./routes/login");
-// const verifyAuthToken = require("./middleware/auth");
+const config = require("config");
+
+//  Ensure that jwt privatekey is present
+if(!config.get("blog_jwtPrivateKey")){
+    console.error("Fatal Error: jwtPrivateKey Not found");
+    process.exit(1);
+}
+
 
 // middlewares
 app.use(express.json()); //parse incoming body to json
-// app.use(verifyAuthToken)
+
 
 // route middlewares
 app.use("/api/users", users);

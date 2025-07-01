@@ -4,6 +4,8 @@ const router = express.Router();
 const _ = require("lodash");
 // model
 const Users = require("../models/user");
+// middleware
+const verifyAuthToken = require("../middleware/auth");
 
 
 // helper utilities
@@ -11,17 +13,15 @@ const { validateUser, validateUpdateUser } = require("../utilities/utility");
 
 
 
-// Get all users
-router.get("/", async (req, res)=>{
-    const page = req.query.page || 1; //set page number
-    const limit = req.query.limit || 10; // set limit to data returned
-
+// Get current logged in user
+router.get("/me", verifyAuthToken, async (req, res) => {
     try {
-        const users = await Users.find().skip((page - 1) * limit).limit(limit);
+        // Get the users detail via it's id and exclude it's password
+        const user = await Users.findById(req.user._id).select("-password");
         // send response
         res.send({
             message: "Success!",
-            data: users
+            data: user
         })
     } catch (err) {
         console.error(err)
@@ -59,7 +59,7 @@ router.post("/", async (req, res) => {
         // send response
         res.send({
             message: "Success creating user!",
-            data: _.pick(newUser, ["_id","firstName","lastName","email"])
+            data: _.pick(newUser, ["_id","firstName","lastName","email","isAdmin"])
         });
     } catch (err) {
         console.error(err)
