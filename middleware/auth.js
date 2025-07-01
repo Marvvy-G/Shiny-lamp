@@ -7,13 +7,13 @@ const verifyAuthToken = ( req, res, next ) => {
     // check if bearer token is even included
     if(!authToken) return res.status(401).send("Access denied! No token provided.");
     
-    // verify token
     try {
-        const decoded = jwt.verify(authToken, config.get("blog_jwtPrivateKey"));
-        //  attach decoded details to the user request
-        req.user = decoded;
-        // move on
-        next();
+        
+        const decoded = jwt.verify(authToken, config.get("blog_jwtPrivateKey")); // verify token using jwt's verify method
+
+        req.user = decoded; //  attach decoded details to the user request
+        
+        next(); // move on
     } catch (ex) {
         console.error(`Invalid token: ${ex.jsonWebTokenError}`);
         return res.status(400).send("Invalid token!");

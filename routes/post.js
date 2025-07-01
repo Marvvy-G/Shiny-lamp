@@ -94,12 +94,12 @@ router.put("/:id", [verifyAuthToken, verifyAdminRole] , async (req, res) => {
         });
 
         // save updated post details
-        const result = await post.save();
+        await post.save();
 
         // send response
         res.send({
             message: "Successfully updated post",
-            data: result
+            data: post
         })
 
     } catch (err) {

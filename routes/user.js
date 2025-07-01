@@ -73,7 +73,7 @@ router.put("/:id", async (req, res)=>{
     const { error } = validateUpdateUser(req.body);
     if(error){
         return res.status(400).send({
-            message: "Oops! Failed to create user.",
+            message: "Oops! Failed to update user.",
             errorDetails: error.details[0].message
         })
     }

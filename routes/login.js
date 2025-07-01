@@ -9,7 +9,7 @@ router.post("/", async (req, res)=>{
     const { error } = validateLogin(req.body);
     if(error){
         return res.status(400).send({
-            message: "Oops! Failed to create user.",
+            message: "Oops! Failed to login user.",
             errorDetails: error.details[0].message
         })
     }
@@ -19,9 +19,9 @@ router.post("/", async (req, res)=>{
         if(!foundUser) return res.status(400).send("Invalid email or password!"); // send feedback response if not found
         
         const validPassword = await bcrypt.compare(req.body.password, foundUser.password); // compare user password with hashed password
-        if(!validPassword) return res.status(400).send("Invalid email or password!"); // if user password doesn't match
+        if(!validPassword) return res.status(400).send("Invalid email or password!"); // send feedback if user password doesn't match
 
-        const token = foundUser.generateAuthToken(); //Generate authToken
+        const token = foundUser.generateAuthToken(); //Generate authToken using method created by encapsulating the login in model
         
         res.send({
             message: "Successfully Logged in!",             // send response
