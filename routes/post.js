@@ -2,6 +2,8 @@ const express = require("express");
 const BlogPost = require("../models/post");
 const { validateBlogPost, validateUpdateBlogPost, validateDeleteBlogPost } = require("../utilities/utility");
 const router = express.Router();
+// middleware
+const verifyAuthToken = require("../middleware/auth");
 
 // Get all blog posts
 router.get("/", async (req, res) => {
@@ -23,7 +25,7 @@ router.get("/", async (req, res) => {
 });
 
 // create blog post
-router.post("/", async (req, res) => {
+router.post("/", verifyAuthToken , async (req, res) => {
     // Validate incoming body
     const { error } = validateBlogPost(req.body);
     if(error){

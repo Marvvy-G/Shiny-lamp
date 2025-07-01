@@ -1,7 +1,10 @@
 const mongoose = require("mongoose");
+const config = require("config");
+const jwt = require("jsonwebtoken");
 
-// mongoose user model with schema
-const Users = mongoose.model("User", new mongoose.Schema({
+
+// user schema
+const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
         required: true,
@@ -37,7 +40,20 @@ const Users = mongoose.model("User", new mongoose.Schema({
         minLength: 4,
         maxLength: 1024
     }
-}));
+});
+
+// token generation method
+userSchema.methods.generateAuthToken = function (){
+
+    const token =  jwt.sign(
+        {_id: this._id,fName: this.firstName}, // payload
+        config.get("blog_jwtPrivateKey") // Secret private key
+    ); 
+
+    return token;
+}
+// mongoose user model with schema
+const Users = mongoose.model("User", userSchema);
 
 
 module.exports = Users;

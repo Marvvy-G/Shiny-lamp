@@ -4,9 +4,11 @@ const app = express();
 const users = require("./routes/user");
 const posts = require("./routes/post");
 const login = require("./routes/login");
+// const verifyAuthToken = require("./middleware/auth");
 
 // middlewares
 app.use(express.json()); //parse incoming body to json
+// app.use(verifyAuthToken)
 
 // route middlewares
 app.use("/api/users", users);
