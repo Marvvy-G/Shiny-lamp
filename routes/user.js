@@ -59,7 +59,7 @@ router.post("/", async (req, res) => {
         // send response
         res.send({
             message: "Success creating user!",
-            data: _.pick(newUser, ["_id","firstName","lastName","email","isAdmin"])
+            data: _.pick(newUser, ["_id","firstName","lastName","email","role"])
         });
     } catch (err) {
         console.error(err)
