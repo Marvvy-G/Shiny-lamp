@@ -22,6 +22,10 @@ router.get("/", async (req, res) => {
         });
     } catch (err) {
         console.error(err);
+        res.status(500).send({
+            message: "An unexpected error occurred",
+            details: err
+        })
     }
 });
 
@@ -54,7 +58,11 @@ router.post("/", [verifyAuthToken, verifyAdminRole] , async (req, res) => {
         })
         
     } catch (err) {
-        console.error(err)
+        console.error(err);
+        res.status(500).send({
+            message: "An unexpected error occurred",
+            details: err
+        })
     }
 });
 
@@ -103,7 +111,11 @@ router.put("/:id", [verifyAuthToken, verifyAdminRole] , async (req, res) => {
         })
 
     } catch (err) {
-        console.error(err)
+        console.error(err);
+        res.status(500).send({
+            message: "An unexpected error occurred",
+            details: err
+        })
     }
 });
 
@@ -135,7 +147,11 @@ router.delete("/:id", [verifyAuthToken, verifyAdminRole] , async (req, res) => {
         })
 
     } catch (err) {
-        console.error(err)
+        console.error(err);
+        res.status(500).send({
+            message: "An unexpected error occurred",
+            details: err
+        })
     }
 });
 

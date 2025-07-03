@@ -24,7 +24,11 @@ router.get("/me", verifyAuthToken, async (req, res) => {
             data: user
         })
     } catch (err) {
-        console.error(err)
+        console.error(err);
+        res.status(500).send({
+            message: "An unexpected error occurred",
+            details: err
+        })
     }
 })
 
@@ -62,7 +66,11 @@ router.post("/", async (req, res) => {
             data: _.pick(newUser, ["_id","firstName","lastName","email","role"])
         });
     } catch (err) {
-        console.error(err)
+        console.error(err);
+        res.status(500).send({
+            message: "An unexpected error occurred",
+            details: err
+        })
     }
    
 })
@@ -109,6 +117,10 @@ router.put("/:id", async (req, res)=>{
         });
     } catch (err) {
         console.error(err);
+        res.status(500).send({
+            message: "An unexpected error occurred",
+            details: err
+        })
     }
     
 })

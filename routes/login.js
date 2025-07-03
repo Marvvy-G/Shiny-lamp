@@ -28,7 +28,11 @@ router.post("/", async (req, res)=>{
             token: token
         });
     } catch (error) {
-        console.error(error);
+        console.error(err);
+        res.status(500).send({
+            message: "An unexpected error occurred",
+            details: err
+        })
     }
 })
 
