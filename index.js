@@ -3,13 +3,24 @@ const mongoose = require("mongoose");
 const app = express();
 const users = require("./routes/user");
 const posts = require("./routes/post");
+const login = require("./routes/login");
+const config = require("config");
+
+//  Ensure that jwt privatekey is present
+if(!config.get("blog_jwtPrivateKey")){
+    console.error("Fatal Error: jwtPrivateKey Not found");
+    process.exit(1);
+}
+
 
 // middlewares
 app.use(express.json()); //parse incoming body to json
 
+
 // route middlewares
 app.use("/api/users", users);
 app.use("/api/posts", posts);
+app.use("/api/login", login);
 
 
 
