@@ -13,7 +13,7 @@ const BlogPost = mongoose.model("Post", new mongoose.Schema(
         },
         // referencing the user id
         authorId: {
-            type: mongoose.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: true
         }
