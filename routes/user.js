@@ -1,26 +1,34 @@
 const express = require("express");
+const bcrypt = require("bcrypt");
 const router = express.Router();
+const _ = require("lodash");
+// model
 const Users = require("../models/user");
+// middleware
+const verifyAuthToken = require("../middleware/auth");
+
 
 // helper utilities
-const { validateUser } = require("../utilities/utility");
+const { validateUser, validateUpdateUser } = require("../utilities/utility");
 
 
 
-// Get all users
-router.get("/", async (req, res)=>{
-    const page = req.query.page || 1; //set page number
-    const limit = req.query.limit || 10; // set limit to data returned
-
+// Get current logged in user
+router.get("/me", verifyAuthToken, async (req, res) => {
     try {
-        const users = await Users.find().skip((page - 1) * limit).limit(limit);
+        // Get the users detail via it's id and exclude it's password
+        const user = await Users.findById(req.user._id).select("-password");
         // send response
         res.send({
             message: "Success!",
-            data: users
+            data: user
         })
     } catch (err) {
-        console.error(err)
+        console.error(err);
+        res.status(500).send({
+            message: "An unexpected error occurred",
+            details: err
+        })
     }
 })
 
@@ -29,7 +37,7 @@ router.post("/", async (req, res) => {
     // validate incoming body
     const { error } = validateUser(req.body);
     if(error){
-        res.status(400).send({
+        return res.status(400).send({
             message: "Oops! Failed to create user.",
             errorDetails: error.details[0].message
         })
@@ -37,23 +45,32 @@ router.post("/", async (req, res) => {
 
     try {
          // create new profile instance
-        const newUser = new Users({
-            name: req.body.name,
+        let newUser = new Users({
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
             age: req.body.age,
-            gender: req.body.gender
+            gender: req.body.gender,
+            email: req.body.email,
+            password: req.body.password
         })
 
+        // Hash password using bcrypt
+        newUser.password = await bcrypt.hash(req.body.password, 10);
 
         // save new user in database
-        const result = await newUser.save();
+        await newUser.save();
 
         // send response
         res.send({
             message: "Success creating user!",
-            data: result
+            data: _.pick(newUser, ["_id","firstName","lastName","email","role"])
         });
     } catch (err) {
-        console.error(err)
+        console.error(err);
+        res.status(500).send({
+            message: "An unexpected error occurred",
+            details: err
+        })
     }
    
 })
@@ -61,10 +78,10 @@ router.post("/", async (req, res) => {
 // update a user
 router.put("/:id", async (req, res)=>{
     // validate incoming body
-    const { error } = validateUser(req.body);
+    const { error } = validateUpdateUser(req.body);
     if(error){
-        res.status(400).send({
-            message: "Oops! Failed to create user.",
+        return res.status(400).send({
+            message: "Oops! Failed to update user.",
             errorDetails: error.details[0].message
         })
     }
@@ -76,9 +93,11 @@ router.put("/:id", async (req, res)=>{
             req.params.id, 
             // updated data
             {
-                name: req.body.name,
+                firstName : req.body.firstName,
+                lastName : req.body.lastName,
                 age : req.body.age,
-                gender : req.body.gender
+                gender : req.body.gender,
+                email: req.body.email
             },
             // return updated data instead of original data
             { 
@@ -98,6 +117,10 @@ router.put("/:id", async (req, res)=>{
         });
     } catch (err) {
         console.error(err);
+        res.status(500).send({
+            message: "An unexpected error occurred",
+            details: err
+        })
     }
     
 })
