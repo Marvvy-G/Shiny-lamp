@@ -11,9 +11,15 @@ const BlogPost = mongoose.model("Post", new mongoose.Schema(
             type: String,
             required: true
         },
+        image: {
+            type: [ String ]
+        },
+        video: {
+            type: [ String ]
+        },
         // referencing the user id
         authorId: {
-            type: mongoose.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: true
         }

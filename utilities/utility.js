@@ -56,6 +56,18 @@ const validateUpdateBlogPost = ( data ) => {
     // return the result
     return result;
 }
+const validateComment = ( data ) => {
+    // create schema for expected json body
+    const schema = Joi.object({
+        text: Joi.string().min(3).max(255).required(),
+        authorId: Joi.objectId().required(),
+        parentCommentId: Joi.objectId(),
+    });
+    // validate body based on schema
+    const result = schema.validate(data);
+    // return the result
+    return result;
+}
 
 
 
@@ -76,4 +88,5 @@ module.exports.validateUser = validateUser;
 module.exports.validateUpdateUser = validateUpdateUser;
 module.exports.validateBlogPost = validateBlogPost;
 module.exports.validateUpdateBlogPost = validateUpdateBlogPost;
+module.exports.validateComment = validateComment;
 module.exports.validateLogin = validateLogin;
