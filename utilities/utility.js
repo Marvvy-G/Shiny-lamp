@@ -1,5 +1,9 @@
 const Joi = require("joi");
+
+const BlogPost = require("../models/post");
+
 Joi.objectId = require("joi-objectid")(Joi);
+
 
 
 const validateUser = ( data ) => {
@@ -69,6 +73,18 @@ const validateComment = ( data ) => {
     return result;
 }
 
+const getAllPostsRecursively = async (page = 1, allPosts = []) => {
+    const limit = 3;
+    const posts = await BlogPost.find().skip((page - 1) * limit).limit(limit).populate("author", "name");
+    
+    console.log(`allPosts before check: ${allPosts}`);
+    if (posts.length === 0) return allPosts;
+    
+    allPosts.push(...posts);
+
+    return getAllPostsRecursively(page + 1, allPosts);
+};
+
 
 
 // Authentication related utilities
@@ -88,5 +104,7 @@ module.exports.validateUser = validateUser;
 module.exports.validateUpdateUser = validateUpdateUser;
 module.exports.validateBlogPost = validateBlogPost;
 module.exports.validateUpdateBlogPost = validateUpdateBlogPost;
+module.exports.validateDeleteBlogPost = validateDeleteBlogPost;
+module.exports.getAllPostsRecursively = getAllPostsRecursively;
 module.exports.validateComment = validateComment;
 module.exports.validateLogin = validateLogin;

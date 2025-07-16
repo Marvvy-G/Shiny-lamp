@@ -1,6 +1,6 @@
 const express = require("express");
 const BlogPost = require("../models/post");
-const { validateBlogPost, validateUpdateBlogPost, validateDeleteBlogPost } = require("../utilities/utility");
+const { validateBlogPost, validateUpdateBlogPost, validateDeleteBlogPost, getAllPostsRecursively } = require("../utilities/utility");
 const router = express.Router();
 // middleware
 const verifyAuthToken = require("../middleware/auth");
@@ -8,13 +8,9 @@ const verifyAdminRole = require("../middleware/admin");
 
 // Get all blog posts
 router.get("/", async (req, res) => {
-    // pagination variables
-    const page = req.query.page || 1;
-    const limit = req.query.limit || 10;
-
     try {
-        // Get a maximum of 10 posts and attach the author's name
-        const result = await BlogPost.find().skip((page - 1) * limit).limit(limit).populate("author", "name");
+        const result = await getAllPostsRecursively();
+        
         // send response
         res.send({
             message: "Success",
