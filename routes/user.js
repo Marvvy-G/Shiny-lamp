@@ -97,7 +97,8 @@ router.put("/:id", async (req, res)=>{
                 lastName : req.body.lastName,
                 age : req.body.age,
                 gender : req.body.gender,
-                email: req.body.email
+                email: req.body.email,
+                role: req.body.role
             },
             // return updated data instead of original data
             { 

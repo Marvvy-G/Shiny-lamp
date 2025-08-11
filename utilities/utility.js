@@ -26,6 +26,7 @@ const validateUpdateUser = ( data ) => {
         age: Joi.number().required(),
         gender: Joi.string().min(4).max(50).required(),
         email: Joi.string().email().min(5).max(255).required(),
+        role: Joi.string().valid("USER", "ADMIN" ).required(),
     });
     // validate body based on schema
     const result = schema.validate(data);
@@ -60,7 +61,6 @@ const validateComment = ( data ) => {
     // create schema for expected json body
     const schema = Joi.object({
         text: Joi.string().min(3).max(255).required(),
-        authorId: Joi.objectId().required(),
         parentCommentId: Joi.objectId(),
     });
     // validate body based on schema
