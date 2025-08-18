@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
 
     try {
         // Get a maximum of 10 posts and attach the author's name
-        const result = await BlogPost.find().skip((page - 1) * limit).limit(limit).populate("author", "name");
+        const result = await BlogPost.find().skip((page - 1) * limit).limit(limit).populate("authorId", "name");
         // send response
         res.send({
             message: "Success",

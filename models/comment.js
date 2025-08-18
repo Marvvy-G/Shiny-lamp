@@ -20,6 +20,10 @@ const Comment = mongoose.model("Comment", new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Comment",
         default: null    //null indicates a top level comment
+    },
+    likeUserIds: {
+        type:[ mongoose.Schema.Types.ObjectId ],
+        ref: "User",
     }
 
 }, { timestamps: true }));
