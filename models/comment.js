@@ -24,6 +24,7 @@ const Comment = mongoose.model("Comment", new mongoose.Schema({
     likeUserIds: {
         type:[ mongoose.Schema.Types.ObjectId ],
         ref: "User",
+        default: []
     }
 
 }, { timestamps: true }));

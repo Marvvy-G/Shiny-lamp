@@ -26,6 +26,7 @@ const BlogPost = mongoose.model("Post", new mongoose.Schema(
         likeUserIds: {
             type:[ mongoose.Schema.Types.ObjectId ],
             ref: "User",
+            default: []
         }
     },
     // createdAt and updatedAt timestamps would be included
