@@ -6,6 +6,7 @@ const login = require("../routes/login");
 const likePost = require("../routes/likePost");
 const likeComment = require("../routes/likeComment");
 const toggleBookmark = require("../routes/toggleBookmark");
+const searchBlogPost = require("../routes/search");
 
 
 module.exports = (app)=>{
@@ -19,4 +20,5 @@ module.exports = (app)=>{
     app.use("/api/likePost", likePost);
     app.use("/api/likeComment", likeComment);
     app.use("/api/toggleBookmark", toggleBookmark);
+    app.use("/api/search", searchBlogPost);
 };
