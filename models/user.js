@@ -44,6 +44,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: userRoles,
         default: "USER"
+    },
+    bookmarkedPosts: {
+        type:[ mongoose.Schema.Types.ObjectId ],
+        ref: "Post",
+        default: []
     }
 });
 
